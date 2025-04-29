@@ -18,7 +18,6 @@ mongoose
   });
 
 // Not Found Page middleware
-app.use((req, res)) b 
 
 app.listen(process.env.PORT, () => {
   console.log("Server is running on port: ", process.env.PORT);
