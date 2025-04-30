@@ -59,7 +59,9 @@ userRoute.post("/logIn", async (req, res) => {
       username: user.username,
       userId: user._id,
     };
-    const token = await jwt.sign(payload, process.env.JWT_SECRET);
+    const token = await jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
     res.status(201).json({ message: "Successfully token generated!", token });
   } catch (err) {
     console.log(err);

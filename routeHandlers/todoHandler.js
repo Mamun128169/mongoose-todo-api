@@ -1,12 +1,14 @@
 const express = require("express");
 const Todo = require("../schemas/todoSchema");
+const checkUser = require("../middlewares/checkUser");
 
 //define subApp route
 const todoRoute = express.Router();
 
 // get all todos
-todoRoute.get("/all", async (req, res) => {
+todoRoute.get("/all", checkUser, async (req, res) => {
   try {
+    console.log(req.user);
     const todos = await Todo.find({});
     res.status(200).json(todos);
   } catch (err) {
