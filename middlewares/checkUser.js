@@ -10,9 +10,12 @@ const checkUser = async (req, res, next) => {
     if (!decoded) {
       res.status(403).json({ Error: "Invalid Token, It may expires!" });
     }
-    req.user = decoded;
+    const { username, userId } = decoded;
+    req.username = username;
+    req.userId = userId;
     next();
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };

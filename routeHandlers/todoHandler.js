@@ -8,8 +8,11 @@ const todoRoute = express.Router();
 // get all todos
 todoRoute.get("/all", checkUser, async (req, res) => {
   try {
-    console.log(req.user);
-    const todos = await Todo.find({});
+    console.log(req.username);
+    const todos = await Todo.find({}).populate(
+      "author",
+      "username status -_id"
+    );
     res.status(200).json(todos);
   } catch (err) {
     console.log(err);
@@ -29,13 +32,14 @@ todoRoute.get("/:id", async (req, res) => {
 });
 
 // post a todo
-todoRoute.post("/", async (req, res) => {
+todoRoute.post("/", checkUser, async (req, res) => {
   try {
     const { title, description, status } = req.body;
     const todo = new Todo({
       title,
       description,
       status,
+      author: req.userId,
     });
     await todo.save();
     res.status(201).json({ message: "Todo successfully created!" });

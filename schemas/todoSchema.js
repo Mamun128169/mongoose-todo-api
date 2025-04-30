@@ -17,6 +17,10 @@ const todoSchema = new Schema(
       enum: ["active", "inactive"],
       default: "active",
     },
+    author: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
   },
   {
     timestamps: true,
@@ -24,7 +28,7 @@ const todoSchema = new Schema(
 );
 
 // define the todo model
-const Todo = model("todo", todoSchema);
+const Todo = model("Todo", todoSchema);
 
 // module export
 module.exports = Todo;
