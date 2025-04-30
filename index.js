@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 const userRoute = require("./routeHandlers/userHandler");
+const todoRoute = require("./routeHandlers/todoHandler");
 
 // app middleware
 const app = express();
@@ -20,6 +21,7 @@ mongoose
 
 // subApp mount
 app.use("/users", userRoute);
+app.use("/todos", todoRoute);
 
 // Not Found Page middleware
 app.use((req, res, next) => {
