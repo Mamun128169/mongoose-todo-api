@@ -4,9 +4,22 @@ const Todo = require("../schemas/todoSchema");
 //define subApp route
 const todoRoute = express.Router();
 
-// get a todo
-todoRoute.get("/", async (req, res) => {
+// get all todos
+todoRoute.get("/all", async (req, res) => {
   try {
+    const todos = await Todo.find({});
+    res.status(200).json(todos);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Error: "Internal Server Error!" });
+  }
+});
+
+// get a todo
+todoRoute.get("/:id", async (req, res) => {
+  try {
+    const todo = await Todo.findById(req.params.id);
+    res.status(200).json(todo);
   } catch (err) {
     console.log(err);
     res.status(500).json({ Error: "Internal Server Error!" });
@@ -30,9 +43,28 @@ todoRoute.post("/", async (req, res) => {
   }
 });
 
-// get a todo
-todoRoute.get("/", async (req, res) => {
+// post many todos
+todoRoute.post("/many", async (req, res) => {
   try {
+    const todos = await Todo.insertMany(req.body);
+    res.status(201).json(todos);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Error: "Internal Server Error!" });
+  }
+});
+
+// update a todo
+todoRoute.put("/:id", async (req, res) => {
+  try {
+    const updatedTodo = await Todo.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: { status: "active" },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedTodo);
   } catch (err) {
     console.log(err);
     res.status(500).json({ Error: "Internal Server Error!" });
@@ -40,17 +72,10 @@ todoRoute.get("/", async (req, res) => {
 });
 
 // get a todo
-todoRoute.get("/", async (req, res) => {
+todoRoute.delete("/:id", async (req, res) => {
   try {
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ Error: "Internal Server Error!" });
-  }
-});
-
-// get a todo
-todoRoute.get("/", async (req, res) => {
-  try {
+    await Todo.findByIdAndDelete(req.params.id);
+    res.status(200).json({ message: "Todo successfully deleted!" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ Error: "Internal Server Error!" });
