@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../schemas/userSchema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const checkUser = require("../middlewares/checkUser");
 
 // define subApp route
 const userRoute = express.Router();
@@ -63,6 +64,17 @@ userRoute.post("/logIn", async (req, res) => {
       expiresIn: "1h",
     });
     res.status(201).json({ message: "Successfully token generated!", token });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ Error: "Internal Server Error!" });
+  }
+});
+
+// get active all users
+userRoute.get("/all", checkUser, async (req, res) => {
+  try {
+    const users = await User.find({ status: "active" }).populate("todos");
+    res.status(200).json({ data: users, message: "success" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ Error: "Internal Server Error!" });

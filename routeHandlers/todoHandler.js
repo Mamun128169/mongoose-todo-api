@@ -1,6 +1,7 @@
 const express = require("express");
 const Todo = require("../schemas/todoSchema");
 const checkUser = require("../middlewares/checkUser");
+const User = require("../schemas/userSchema");
 
 //define subApp route
 const todoRoute = express.Router();
@@ -41,7 +42,16 @@ todoRoute.post("/", checkUser, async (req, res) => {
       status,
       author: req.userId,
     });
-    await todo.save();
+    const savedTodo = await todo.save();
+
+    //link the todo ID with it's corresponding user
+    await User.updateOne(
+      { _id: req.userId },
+      {
+        $push: { todos: savedTodo._id },
+      }
+    );
+
     res.status(201).json({ message: "Todo successfully created!" });
   } catch (err) {
     console.log(err);

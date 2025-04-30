@@ -22,6 +22,12 @@ const userSchema = new Schema(
       enum: ["active", "inactive"],
       default: "active",
     },
+    todos: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Todo",
+      },
+    ],
   },
   {
     timestamps: true,
